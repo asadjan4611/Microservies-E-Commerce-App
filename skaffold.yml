@@ -1,0 +1,44 @@
+apiVersion: skaffold/v2beta26  
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/K8s/*
+build:
+  local:
+    push: true
+  artifacts:
+    - image: asadjan/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: asadjan/orders
+      context: orders
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+   
+    # - image: asadjan/client
+    #   context: client
+    #   docker:
+    #     dockerfile: Dockerfile
+    #   sync:
+    #     manual:
+    #       - src: '**/*.js'
+    #         dest: .
+    - image: asadjan/tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+ 

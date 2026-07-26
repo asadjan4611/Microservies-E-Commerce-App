@@ -1,8 +1,20 @@
-import express,{Request,Response} from "express";
-const  router = express.Router();
+import express, { Request, Response } from "express";
+import { body } from "express-validator";
+import { requireAuth, validateRequest } from "@asadjan/common_test";
+import { Order } from "../model/order";
+import { Ticket } from "../model/ticket";
+const router = express.Router();
 
-router.get("/api/orders/:orderId",(req:Request,res:Response)=>{
-    res.send("Hello from orders service");
-});
+router.get(
+    "/api/orders",
+    requireAuth
+    , async (req: Request, res: Response) => {
 
-export {router as indexOrderRouter};
+        const orders = await Order.find({
+            userId: req.currentUser!.id
+        }).populate('ticket');
+
+        res.send(orders);
+    });
+
+export { router as indexOrderRouter };

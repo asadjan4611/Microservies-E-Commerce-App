@@ -1,19 +1,21 @@
 import express,{Request,Response} from "express";
-import { body } from "express-validator";
+import { param } from "express-validator";
 import { NotAuthorizedError, NotFoundError, OrderStatus, requireAuth, validateRequest } from "@asadjan/common_test";
 import { Order } from "../model/order";
 import { Ticket } from "../model/ticket";
+import OrderCancelledPublisher from "../event/publisher/order-cancelled-publisher";
+import { natsWrapper } from "../nats-wrapper";
 const  router = express.Router();
 
 router.delete("/api/orders/:orderId",[
-    body('ticketId')
+    param('orderId')
         .not()
         .isEmpty()
-        .withMessage('Ticket ID is required')
+        .withMessage('Order ID is required')
 ],validateRequest,requireAuth,async (req:Request,res:Response)=>{
 
        const orderId=req.params.orderId;
-       const order = await Order.findById(orderId);
+       const order = await Order.findById(orderId).populate("ticket");
       //  order
       //  order.userId = req.currentUser!.id;
        if(!order){
@@ -27,8 +29,14 @@ router.delete("/api/orders/:orderId",[
          await order.save();
 
 
-         // publish an event saying that this order was cancelled
-         
+          // publish an event saying that this order was cancelled
+          await new OrderCancelledPublisher(natsWrapper.client).listen({
+                     id:order._id.toString(),
+                     version:order.version,
+                     ticket:{
+                       id:order.ticket._id.toString ()
+                     },
+                   });
     res.status(204).send(order);
 });
 

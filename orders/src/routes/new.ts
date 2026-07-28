@@ -11,6 +11,8 @@ import mongoose from "mongoose";
 import { OrderStatus } from "@asadjan/common_test";
 import { Ticket } from "../model/ticket";
 import { Order } from "../model/order";
+import OrderCreatePublisher from "../event/publisher/order-create-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 
 
@@ -54,13 +56,22 @@ router.post(
             userId: req.currentUser!.id,
             status: OrderStatus.Created,
             expiresAt: expiration,
-            ticket,
+            ticket  
         });
         await order.save();
 
-        //publish an event saying that an order was created
-         
-
+        // Publish the version generated when the order was saved.
+        await new OrderCreatePublisher(natsWrapper.client).listen({
+            id: order._id.toString(),
+            status: order.status,
+            userId: order.userId,
+            expiresAt: order.expiresAt.toISOString(),
+            version: order.version,
+            ticket: {
+                id: ticket._id.toString(),
+                price: ticket.price,
+            },
+        });
         res.status(201).send(order); 
     });
 

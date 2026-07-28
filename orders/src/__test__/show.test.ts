@@ -9,6 +9,7 @@ import {it,expect } from "@jest/globals";
 it('fetches the order',async()=>{
     //create a ticket
     const ticket = Ticket.build({   
+            id:new mongoose.Types.ObjectId().toHexString(),
         title: 'concert',
         price: 20
     });
@@ -37,6 +38,8 @@ it('fetches the order',async()=>{
 it('returns an error if one user tries to fetch another users order',async()=>{
     //create a ticket
     const ticket = Ticket.build({
+            id:new mongoose.Types.ObjectId().toHexString(),
+
         title: 'concert',
         price: 20
     });

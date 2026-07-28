@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express";
-import {body} from "express-validator";
+import { param } from "express-validator";
 import { NotAuthorizedError, NotFoundError, requireAuth, validateRequest } from "@asadjan/common_test";
 import { Order } from "../model/order";
 const router = express.Router();
 
 router.get("/api/orders/:orderId",
     [
-        body('orderId')
+        param('orderId')
             .not()
             .isEmpty()
             .withMessage('Order ID is required')

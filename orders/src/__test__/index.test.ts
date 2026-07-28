@@ -1,13 +1,14 @@
 import request from "supertest";
-import {app}  from "../app";
-import {it} from "@jest/globals";
-import {Ticket} from "../model/ticket";
-import {expect} from "@jest/globals";
+import { app } from "../app";
+import { it } from "@jest/globals";
+import { Ticket } from "../model/ticket";
+import { expect } from "@jest/globals";
+import mongoose from "mongoose";
 
 
-
- const buildTicket = async () => {
+const buildTicket = async () => {
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'concert',
         price: 20,
     });
@@ -20,7 +21,7 @@ import {expect} from "@jest/globals";
 it('returns a list of orders for a particular user', async () => {
     // Create three tickets
 
-     const ticketOne = await buildTicket();
+    const ticketOne = await buildTicket();
     const ticketTwo = await buildTicket();
     const ticketThree = await buildTicket();
 

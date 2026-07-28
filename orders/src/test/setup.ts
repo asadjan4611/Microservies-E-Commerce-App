@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
      var signin: () => string[];
 }
 
-  // jest.mock('../../nats-wrapper');
+jest.mock('../nats-wrapper');
 
 
 let mongo: any;
@@ -46,13 +46,11 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
-
-
-     if(mongo){
-
-     }
-    await mongo.stop();
     await mongoose.connection.close();
+
+    if (mongo) {
+      await mongo.stop();
+    }
     // await mongoose.disconnect();
 }); 
 

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {OrderStatus} from "@asadjan/common_test/build";
+import { OrderStatus } from "@asadjan/common_test/build";
 import { TicketDoc } from "./ticket";
 
 
@@ -10,17 +10,13 @@ interface OrderAttrs {
     ticket: TicketDoc;
 }
 
-
-
-
 interface OrderDoc extends mongoose.Document {
     userId: string;
     status: OrderStatus;
     expiresAt: Date;
     ticket: TicketDoc;
+    version: number;
 }
-
-
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
     build(attrs: OrderAttrs): OrderDoc;
@@ -48,6 +44,8 @@ const orderSchema = new mongoose.Schema(
         },
     },
     {
+        versionKey: "version",
+        optimisticConcurrency: true,
         toJSON: {
             transform(doc, ret: any) {
                 ret.id = ret._id;

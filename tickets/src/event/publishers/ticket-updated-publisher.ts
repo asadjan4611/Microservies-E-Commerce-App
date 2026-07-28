@@ -8,7 +8,4 @@ import Publisher from '@asadjan/common_test/build/event/base-publisher';
 }
 
 
-
-
-
 export default TicketUpdatedPublisher;

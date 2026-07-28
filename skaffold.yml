@@ -22,7 +22,7 @@ build:
         dockerfile: Dockerfile
       sync:
         manual:
-          - src: '**/*.js'
+          - src: '**/*.ts'
             dest: .
    
     # - image: asadjan/client
@@ -35,6 +35,14 @@ build:
     #         dest: .
     - image: asadjan/tickets
       context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+    - image: asadjan/expiration
+      context: expiration
       docker:
         dockerfile: Dockerfile
       sync:

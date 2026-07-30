@@ -1,4 +1,4 @@
-import useRequest from '../../hooks/use-request';
+import useRequest from '../../../hooks/use-request';
 import Router from 'next/router';
 
 
@@ -15,17 +15,17 @@ const TicketShow = ({ ticket }) => {
     },
     onSuccess: (order) => Router.push(`/orders/${order.id}`)
   });
-  const purchaseTicket = async () => {
-    await doRequest();
-  };
+
+  const purchaseTicket = () => {
+    doRequest();
+  }
 
 
   return (
     <div>
       <h1>{ticket.title}</h1>
       <h4>{ticket.price}</h4>
-      <button onClick={purchaseTicket} className="btn btn-primary">Purchase</button>
-      {errors}
+      <button  onClick={()=>doRequest()} className="btn btn-primary">Purchase</button>
     </div>
   );
 

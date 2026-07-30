@@ -13,13 +13,17 @@ class OrderCreatedListener extends Listener<OrderCreatedEvent> {
 
   async onMessage(data: OrderCreatedEvent["data"], msg: Message): Promise<void> {
 
-    const delay = new Date(data.expiresAt).getTime() - new Date().getTime();
+    const delay = Math.max(new Date(data.expiresAt).getTime() - Date.now(), 0);
     console.log("Waiting this many milliseconds to process the job:", delay);
-    await expirationQueue.add({
-      orderId: data.id,
-    }, {
-      delay: 1000 * 60 * 1, // 1 minute
-    });
+    await expirationQueue.add(
+      {
+        orderId: data.id,
+      },
+      {
+        delay,
+        jobId: data.id,
+      }
+    );
 
     msg.ack();
   } 

@@ -16,12 +16,12 @@ const expirationQueue = new Queue<Payload>("expiration-queue", {
   redis: {
     host: redisHost,
     port: Number(process.env.REDIS_PORT ?? 6379),
+    maxRetriesPerRequest: null,
   },
 });
 
 expirationQueue.process(async (job) => {
-
-  new ExpirationCompletePublisher(natsWrapper.client).listen({
+  await new ExpirationCompletePublisher(natsWrapper.client).listen({
     orderId: job.data.orderId,
   });
   console.log("Processing job:", job.id, "with data:", job.data);

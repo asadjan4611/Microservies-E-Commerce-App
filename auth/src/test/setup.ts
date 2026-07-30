@@ -18,7 +18,7 @@ beforeAll(async () => {
     const mongoUri = mongo.getUri();
 
     await mongoose.connect(mongoUri,{});
-});
+}, 60000);
 
 
 // beforeEach(async () => {
@@ -52,11 +52,11 @@ beforeEach(async () => {
 // }); 
 
 afterAll(async () => {
+  await mongoose.connection.close();
   if (mongo) {
     await mongo.stop();
   }
-  await mongoose.connection.close();
-});
+}, 60000);
 // function beforeAll(fn: () => Promise<void>) {
 //   // Delegate to Jest's global beforeAll
 //   // (use any to avoid TypeScript issues with the global type)

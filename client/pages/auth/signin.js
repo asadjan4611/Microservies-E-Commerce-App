@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
 
@@ -29,6 +29,8 @@ const SigninPage = () => {
         <input
           value={email}
           onChange={e => setEmail(e.target.value)}
+          type="email"
+          required
           className="form-control"
         />
       </div>
@@ -38,11 +40,12 @@ const SigninPage = () => {
           value={password}
           onChange={e => setPassword(e.target.value)}
           type="password"
+          required
           className="form-control"
         />
       </div>
       {errors}
-      <button className="btn btn-primary">Sign In</button>
+      <button type="submit" className="btn btn-primary">Sign In</button>
     </form>
   );
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
 
@@ -13,10 +13,7 @@ const SignupPage = () => {
       email,
       password
     },
-    onSuccess: () => {
-      console.log('SIGNUP SUCCESSFUL');
-      Router.push('/')
-    }
+    onSuccess: async () => Router.push('/'),
   });
 
   const onSubmit = async event => {                                                                         
@@ -33,6 +30,8 @@ const SignupPage = () => {
         <input
           value={email}
           onChange={e => setEmail(e.target.value)}
+          type="email"
+          required
           className="form-control"
         />
       </div>
@@ -42,11 +41,12 @@ const SignupPage = () => {
           value={password}
           onChange={e => setPassword(e.target.value)}
           type="password"
+          required
           className="form-control"
         />
       </div>
       {errors}
-      <button className="btn btn-primary">Sign Up</button>
+      <button type="submit" className="btn btn-primary">Sign Up</button>
     </form>
   );
 };

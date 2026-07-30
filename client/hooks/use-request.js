@@ -4,7 +4,7 @@ import { useState } from "react";
 const useRequest = ({ url, method, body, onSuccess }) => {
     const [errors, setErrors] = useState(null);
 
-    const doRequest = async () => {
+    const doRequest = async (props = {}) => {
         try {
             setErrors(null);
             const response = await axios(url, {
@@ -12,27 +12,26 @@ const useRequest = ({ url, method, body, onSuccess }) => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                data: JSON.stringify(body)
+                data: { ...body, ...props },
             });
-
-            // if (!response.ok) {
-            //     console.log('Response is not ok:', response);
-            //     const errorResponse =response.data;
-            //     setErrors(errorResponse.errors);
-            //     return;
-            // }
 
             const data = response.data;
 
+            if (onSuccess) {
+                await onSuccess(data);
+            }
 
             return data;
         }
         catch (err) {
-            console.log('Error in mmmmm useRequest:', err.response.data.errors);
+            const requestErrors = err.response?.data?.errors || [
+                { message: 'Something went wrong. Please try again.' },
+            ];
+
             setErrors(
                 <div className="alert alert-danger">
                     <ul> 
-                        {err.response.data.errors.map((err, index) => (
+                        {requestErrors.map((err, index) => (
                             <li key={index}>{err.message}</li>
                         ))}
                     </ul>
